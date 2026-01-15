@@ -1,0 +1,234 @@
+---
+title: "svm01xht: Support Vector Machine (SVM) for Binary Classification with Hypothesis Testing Evaluation"
+author: "Vincent, Boer <123040049@link.cuhk.edu.cn> and Adrian, Kristanto <123040001@link.cuhk.edu.cn>"
+output: 
+  rmarkdown::html_vignette:
+    includes:
+      in_header: style.html
+vignette: >
+  %\VignetteIndexEntry{svm01xht: Support Vector Machine (SVM) for Binary Classification with Hypothesis Testing Evaluation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", cache = FALSE, 
+                      autodep = FALSE, cache.comments = FALSE,
+                      fig.width = 8, fig.height = 5)
+
+suppressPackageStartupMessages(library(svm01xht))
+
+```
+
+---
+
+## Setup
+
+In this documentation, the "loan_dataset.rda" will be used to provide demonstrations of the functions. First, let's have a look at the dataset.
+
+```{r 1, include = TRUE}
+library(svm01xht)
+
+dataset = loan_dataset
+names(dataset)
+dataset[sample(1:nrow(dataset), 8), ]
+
+```
+
+This dataset has 14 columns, consisting of 13 feature columns, and 1 label column. The feature columns consist of numeric and character data. The numeric data further consists of discrete and continuous values. The "loan_status" column is the binary label with values 0 and 1, indicating whether a loan was rejected or accepted. The goal here is to build a model to judge whether a loan should be rejected or accepted based on available feature columns.
+
+## Data Preprocessing
+
+Before doing data preprocessing, it is helpful to have a look at the distribution of the data to understand the data and decide which features are useful in creating a model. The `plot_hist` function can be used to plot the histogram of feature columns in the data. For example:
+
+```{r 2, include = TRUE}
+plot_hist(dataset, "person_age")
+plot_hist(dataset, "person_education")
+plot_hist(dataset, "loan_amnt")
+
+```
+
+Or if all feature columns needed to be plot:
+
+```{r 3, eval = FALSE}
+lapply(names(dataset), function(x) {
+  plot_hist(dataset, x)
+})
+
+```
+
+After looking at the data overview, we can begin to process the data. Feature columns that are difficult to use in modeling such as "loan_intent" can be removed for simplicity. Note that these feature columns could be transformed into forms suitable for SVM through more advanced processing methods, but such steps are beyond the scope of this package.
+
+```{r 4, include = TRUE}
+dataset = dataset[, -which(names(dataset) %in% c("loan_intent"))]
+
+```
+
+Now we are left with 13 columns. Currently, the dataset has character features which cannot be used in SVM. However, we cannot simply remove all these columns. Instead, we should map some of the character feature columns to numeric feature columns. Notice that the feature columns such as "person_education" and "person_home_ownership" have values which can be scaled in a logical sense to integer. Similarly, "person_gender" and "previous_loan_defaults_on_file" are binary in character format. To convert these character columns, we can create a list that consist of logical orders of the character feature column values. The `preprocess` function will then map these character values to their index order in the list as their new representation. Other than converting character columns to numeric, the label column also need to be converted from binary 0 and 1, to -1 and 1 for SVM purpose. This can also be done in the `preprocess` function by providing the label column name or index.
+
+```{r 5, include = TRUE}
+# Create a list which maps the character feature columns to numeric.
+mapping = list(person_gender = c("male", "female"),
+                person_education = c("High School", "Bachelor", "Master", "Doctorate", 
+                                     "Associate"),
+                person_home_ownership = c("OTHER", "RENT", "MORTGAGE", "OWN"),
+                previous_loan_defaults_on_file = c("No", "Yes"))
+
+dataset = preprocess(dataset, mapping, "loan_status")
+
+dataset[sample(1:nrow(dataset), 8), ]
+
+```
+
+The `preprocess` function automatically removes any rows with NA values and columns with unconverted character values for simplicity. It also names unnamed columns, as column names will be needed for some later functions. With the dataset now consist of only numeric feature columns and -1 and 1 label, it can now be used to train SVM models.
+
+## SVM Model Training
+
+The `svm` function takes numeric features and label data, and returns a list of values which represents the SVM model.
+
+```{r 6, include = TRUE}
+data = dataset[, c(1:12)]
+label = dataset[, 13]
+
+random.train.index = sample(1:nrow(data), size = 200, replace = FALSE)
+
+linear.model = svm(data[random.train.index, ], label[random.train.index])
+linear.model
+
+```
+
+We can also decide to use random index of the data and choose feature columns for the model by providing the column names.
+
+```{r 7, include = TRUE}
+linear.model.partial = svm(data, label, n = 200, features = names(data)[1:10])
+linear.model.partial
+
+```
+
+In addition to linear SVM, polynomial and rbf kernels are also supported in the `svm` function. 
+
+```{r 8, include = TRUE}
+poly.model = svm(data, label, type = "polynomial", n = 200)
+
+rbf.model = svm(data, label, type = "rbf", n = 200)
+
+```
+
+## Prediction and Accuracy Test
+
+The models can be used to predict new data using the `predict` function. The accuracy of the prediction can be directly evaluated using the `test_accuracy` function.
+
+```{r 9, include = TRUE}
+random.test.index = sample(1:nrow(data), size = 200, replace = FALSE)
+
+predict(linear.model, data[random.test.index, ])
+test_accuracy(linear.model, data[random.test.index, ], label[random.test.index])
+
+predict(linear.model.partial, data[random.test.index, ])
+test_accuracy(linear.model.partial, data[random.test.index, ], label[random.test.index])
+
+predict(poly.model, data[random.test.index, ])
+test_accuracy(poly.model, data[random.test.index, ], label[random.test.index])
+
+predict(rbf.model, data[random.test.index, ])
+test_accuracy(rbf.model, data[random.test.index, ], label[random.test.index])
+
+```
+
+## Feature Selection
+
+In this example dataset, the number of features is small. However, in other datasets, number of features can be very large that feature selection should be done for efficiency. This package has `select_features` function to choose top "n" features if "n" is given, or all meaningful features where a feature is considered meaningful if it's absolute correlation to the label is above some "min" value between 0 and 1.
+
+```{r 10, include = TRUE}
+select_features(data, label, n = 8, show = TRUE)
+select_features(data, label, min = 0.1)
+
+data = data[, c(select_features(data, label, n = 8))]
+
+```
+
+## Parameter Tuning
+
+The parameters for the kernels and the regularization parameter of the SVM can also be adjusted to improve the model. To choose a suitable parameter for a model, we can use the `tune_parameters` function which compares the performance of models with different parameters.
+
+```{r 11, include = TRUE}
+random.train.index = sample(1:nrow(data), size = 500, replace = FALSE)
+random.test.index = sample(1:nrow(data), size = 500, replace = FALSE)
+
+tune_parameters(data[random.train.index, ], label[random.train.index], 
+               data[random.test.index, ], label[random.test.index], 
+               type = "linear", C = c(1, 10))
+
+tune_parameters(data[random.train.index, ], label[random.train.index], 
+               data[random.test.index, ], label[random.test.index], 
+               type = "polynomial", c = c(1, 10), degree = c(2, 3))
+
+tune_parameters(data[random.train.index, ], label[random.train.index], 
+               data[random.test.index, ], label[random.test.index], 
+               type = "rbf", C = c(1, 10), gamma = c(0.1, 1))
+
+```
+
+Now that we have compared the parameters, we can train the model using more suitable parameters with more samples to improve accuracy (while not always).
+
+```{r 12, include = TRUE}
+random.test.index = sample(1:nrow(data), size = 1000, replace = FALSE)
+
+linear.model.tuned = svm(data, label, type = "linear", n = 1000, C = 10)
+test_accuracy(linear.model.tuned, data[random.test.index, ], label[random.test.index])
+
+poly.model.tuned = svm(data, label, type = "polynomial", n = 1000, c = 10, degree = 3)
+test_accuracy(poly.model.tuned, data[random.test.index, ], label[random.test.index])
+
+rbf.model.tuned = svm(data, label, type = "rbf", n = 1000, C = 1, gamma = 0.1)
+test_accuracy(rbf.model.tuned, data[random.test.index, ], label[random.test.index])
+
+```
+
+From the results, we can see that both rbf and linear models perform better compared to polynomial models. Thus, we will continue to evaluate the linear and rbf models.
+
+
+## Model Evaluation
+
+We can evaluate the accuracy of a model to an expected accuracy through hypothesis testing. For example, we want to check if "linear.model.tuned" or "rbf.model.tuned" actually has accuracy of above 85%. We can use the `hypo_test` function to evaluate this using Z-test or likelihood ratio test (LRT).
+
+```{r 13, include = TRUE}
+linear.model.z.test = hypo_test(linear.model.tuned, 
+                                data[random.test.index, ], label[random.test.index], 
+                                0.85, alternative = "greater", method = "z")
+linear.model.lrt = hypo_test(linear.model.tuned, 
+                             data[random.test.index, ], label[random.test.index], 
+                             0.85, alternative = "greater", method = "lrt")
+linear.model.z.test$status
+linear.model.lrt$status
+
+rbf.model.z.test = hypo_test(rbf.model.tuned, 
+                             data[random.test.index, ], label[random.test.index], 
+                             0.85, alternative = "greater", method = "z")
+rbf.model.lrt = hypo_test(rbf.model.tuned, 
+                          data[random.test.index, ], label[random.test.index], 
+                          0.85, alternative = "greater", method = "lrt")
+rbf.model.z.test$status
+rbf.model.lrt$status
+
+```
+
+If one of the tests reject the null hypothesis, there is enough evidence that the model has accuracy of above 85%. In contrast, if both tests fails to reject the null hypothesis, there is not enough evidence that the model has accuracy of above 80%. To help understanding the test, we can plot the hypothesis testing results using `visualize_ht`. For Z-test, we can also plot the power function (1 - type II error) with respect to the possible true alternatives.
+
+```{r 14, include = TRUE}
+visualize_ht(linear.model.z.test)
+visualize_ht(linear.model.z.test, type = "II")
+visualize_ht(linear.model.lrt)
+visualize_ht(rbf.model.z.test)
+visualize_ht(rbf.model.z.test, type = "II")
+visualize_ht(rbf.model.lrt)
+
+```
+
+## About this Package 
+
+This package was developed as a short, two-week learning project to fulfill course requirements. The goal was to provide hands-on experience in R package development, while exploring data science concepts. Therefore, it relies minimally on external libraries and contains areas that remain incomplete.
+
+
+
+
