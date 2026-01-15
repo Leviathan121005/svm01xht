@@ -1,4 +1,4 @@
-# svm01xht Package
+# svm01xht
 
 **Language:** R
 
