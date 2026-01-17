@@ -6,10 +6,10 @@ Version: 0.1.1
 Author: Vincent, Boer <123040049@link.cuhk.edu.cn> and Adrian, Kristanto <123040001@link.cuhk.edu.cn>
 Maintainer: Vincent, Boer <123040049@link.cuhk.edu.cn>
 Description: An R package for binary support vector machine (SVM) classification with hypothesis testing utilities. 
-  It covers a basic binary SVM workflow, including data preprocessing, model training, parameter tuning, prediction, and evaluation. 
+  It covers a basic binary SVM workflow, including data preprocessing, model training, prediction, and parameter tuning. 
   Functions for simple hypothesis tests, such as Z-test and likelihood ratio test (LRT), are included to assess the model's accuracy 
   to a specified baseline. Additionally, visualization functions are provided to help users inspect the data and illustrate hypothesis 
-  test results. 
+  test results.
 License: GPL-3
 Depends: R (>= 4.4)
 Imports: assertthat, quadprog, ggplot2, stats
