@@ -7,23 +7,24 @@
 test_accuracy(model, data, label)
 }
 \arguments{
-\item{model}{A list that represents an SVM model from svm().}
+\item{model}{An SVM model list object returned by \code{svm()}.}
 
 \item{data}{A data frame of numerical features data.}
 
 \item{label}{A label vector of 1 or -1 with respect to data.}
 }
 \value{
-A number between 0 and 1 that represents level of accuracy.
+The level of accuracy from 0 to 1.
 }
 \description{
-Compare predicted values with actual values to evaluate accuracy of a model.
+Compare predicted values with actual values to calculate model's accuracy.
 }
 \examples{
-model = list(w = c(-1.58, 1.3), b = 0.2, type = "linear", features = c("height", "weight"))
 data = data.frame(height = c(170, 190, 150, 160, 180), weight = c(70, 80, 85, 75, 70))
-names(model$w) = c("height", "weight")
-label =  c(-1, -1, 1, 1, -1)
-test_accuracy(model, data, label)
+label = c(-1, -1, 1, 1, -1)
+linear.model = svm(data, label)
+test.data = data.frame(height = c(175, 195, 155, 165, 185), weight = c(75, 85, 80, 70, 75))
+test.label = data.frame(-1, -1, 1, -1, -1)
+test_accuracy(linear.model, test.data, test.label)
 
 }

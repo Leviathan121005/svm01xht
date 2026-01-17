@@ -2,15 +2,16 @@
 #'
 #' Classify data based on the the trained SVM model's kernel, features, and variables.
 #'
-#' @param model A list that represents an SVM model from svm().
+#' @param model An SVM model list object returned by \code{svm()}.
 #' @param data A data frame of numerical features data.
 #'
 #' @examples
 #' data = data.frame(height = c(170, 190, 150, 160, 180), weight = c(70, 80, 85, 75, 70))
+#' label = c(-1, -1, 1, 1, -1)
+#' linear.model = svm(data, label)
 #' test.data = data.frame(height = c(175, 195, 155, 165, 185), weight = c(75, 85, 80, 70, 75))
-#' model = list(w = c(-1.58, 1.3), b = 0.2, type = "linear", features = c("height", "weight"))
-#' names(model$w) = c("height", "weight")
-#' predict(model, test.data)
+#' test.label = data.frame(-1, -1, 1, -1, -1)
+#' predict(linear.model, test.data)
 #'
 #' @return A vector of -1 and 1 that represents the label prediction.
 #'
@@ -42,6 +43,7 @@ predict = function(model, data) {
                 model$degree %% 1 == 0 && model$degree <= 5,
                 msg = "Kernel model has invalid dimension or values.")
   }
+
   assert_that(is.data.frame(data), msg = "data must be a data frame")
   assert_that(all(sapply(data, is.numeric)), msg = "data features must be numeric.")
 
@@ -57,7 +59,7 @@ predict = function(model, data) {
   data = scale(data)
   data[is.na(data)] = 0
 
-  # Do calculations for prediction.
+  # Calculate predictions.
   prediction = c()
   for (i in 1:nrow(data)) {
     predictor = model$b

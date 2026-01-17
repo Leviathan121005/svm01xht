@@ -1,9 +1,9 @@
 #' Perform Hypothesis Testing on Model Accuracy
 #'
-#' Conducts a one-sample proportion Z-test or likelihood ratio test (LRT) to determine if the model's accuracy is significantly different from a
-#' specified null hypothesis value.
+#' Conducts a one-sample proportion Z-test or likelihood ratio test (LRT) to assess if the model's accuracy differs significantly from a
+#' specified null value.
 #'
-#' @param model A list that represents an SVM model.
+#' @param model An SVM model list object returned by \code{svm()}.
 #' @param data A data frame of numerical features data.
 #' @param label A label vector of 1 or -1 with respect to data.
 #' @param null.value Null hypothesis of accuracy value. Defaults to 0.8
@@ -21,13 +21,13 @@
 #' \describe{
 #'   \item{estimate}{Estimated accuracy of the model.}
 #'   \item{n}{Sample size.}
-#'   \item{null.value}{Null hypothesis value used in the test.}
-#'   \item{alternative}{Type of alternative hypothesis used in the test.}
-#'   \item{method}{Test method used in the test. Z-test or LRT.}
-#'   \item{alpha}{Significance level used in the test.}
-#'   \item{test.statistic}{Value of test statistic.}
-#'   \item{p.value}{P-value of the test.}
-#'   \item{status}{Reject or fail to reject the null hypothesis.}
+#'   \item{null.value}{Null hypothesis value.}
+#'   \item{alternative}{Type of alternative hypothesis.}
+#'   \item{method}{Test method. Z-test or LRT.}
+#'   \item{alpha}{Significance level.}
+#'   \item{test.statistic}{Test statistic value.}
+#'   \item{p.value}{P-value.}
+#'   \item{status}{Rejection status of the null hypothesis. Reject or fail to reject.}
 #'   \item{conf.int}{Confidence interval (only for Z-test).}
 #' }
 #'
@@ -39,14 +39,20 @@ hypo_test <- function(model, data, label, null.value = 0.8, alternative = c("two
                       alpha = 0.05, method = c("z", "lrt")) {
   # Input Validations (other assertions are passed to test_accuracy function).
   assert_that(is.list(model), msg = "model must be a list.")
+
   assert_that(is.data.frame(data), msg = "data must be a data frame.")
+
   assert_that(all(label %in% c(-1, 1)), msg = "label must consist only of 1 and -1.")
   assert_that(length(label) == nrow(data), msg = "Number of data and label should match")
-  assert_that(is.numeric(null.value)  && length(alpha) == 1, null.value > 0, null.value < 1,
+
+  assert_that(is.numeric(null.value) && length(null.value) == 1, null.value > 0, null.value < 1,
               msg = "null.value must be a number between 0 and 1.")
+
   alternative <- match.arg(alternative)
+
   assert_that(is.numeric(alpha) && length(alpha) == 1, alpha > 0 && alpha < 1,
               msg = "alpha must be a number between 0 and 1")
+
   method <- match.arg(method)
 
   # Calculate accuracy and sample size
@@ -88,9 +94,11 @@ hypo_test <- function(model, data, label, null.value = 0.8, alternative = c("two
 
     if (alternative == "greater") {
       p.hat.0 = min(p.hat, p.0)
-    } else if (alternative == "less") {
+    }
+    else if (alternative == "less") {
       p.hat.0 = max(p.hat, p.0)
-    } else {
+    }
+    else {
       p.hat.0 = p.0
     }
 

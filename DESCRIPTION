@@ -1,11 +1,15 @@
 Package: svm01xht
 Type: Package
 Title: Support Vector Machine (SVM) for Binary Classification with
-        Hypothesis Testing Evaluation
+        Hypothesis Testing Utilities
 Version: 0.1.1
 Author: Vincent, Boer <123040049@link.cuhk.edu.cn> and Adrian, Kristanto <123040001@link.cuhk.edu.cn>
 Maintainer: Vincent, Boer <123040049@link.cuhk.edu.cn>
-Description: An R package for binary support vector machine (SVM) classification with hypothesis testing utilities. It covers a basic binary SVM workflow, including data preprocessing, model training, parameter tuning, prediction, and evaluation. Functions for simple hypothesis tests, such as Z-test and likelihood ratio test (LRT), are included to assess the model's accuracy to a specified baseline. Additionally, visualization functions are provided to help users inspect the data and illustrate Type I error behavior from the hypothesis tests. 
+Description: An R package for binary support vector machine (SVM) classification with hypothesis testing utilities. 
+  It covers a basic binary SVM workflow, including data preprocessing, model training, parameter tuning, prediction, and evaluation. 
+  Functions for simple hypothesis tests, such as Z-test and likelihood ratio test (LRT), are included to assess the model's accuracy 
+  to a specified baseline. Additionally, visualization functions are provided to help users inspect the data and illustrate hypothesis 
+  test results. 
 License: GPL-3
 Depends: R (>= 4.4)
 Imports: assertthat, quadprog, ggplot2, stats
@@ -16,4 +20,4 @@ RoxygenNote: 7.3.2
 Suggests: knitr, rmarkdown, testthat (>= 3.0.0)
 Config/testthat/edition: 3
 NeedsCompilation: no
-Packaged: 2025-09-18 09:02:46 UTC; Leviathan
+Packaged: 2026-01-17 10:00:18 UTC; Leviathan

@@ -8,8 +8,8 @@
 #' @examples
 #' data = data.frame(height = c(170, 190, 150, 160, 180), weight = c(70, 80, 85, 75, 70))
 #' label = c(-1, -1, 1, 1, -1)
-#' model = svm(data, label)
-#' test = hypo_test(model, data, label)
+#' linear.model = svm(data, label)
+#' test = hypo_test(linear.model, data, label)
 #' visualize_ht(test)
 #'
 #' @return A plot showing either:
@@ -31,7 +31,7 @@ visualize_ht <- function(test.result, type = c("I", "II")) {
               all(sapply(test.result[c("alternative", "method", "status")], is.character)),
               msg = "test.result has invalid data type.")
 
-  # To shorten variable names.
+  # Abbreviations for variable names.
   estimate = test.result$estimate
   n = test.result$n
   null.value = test.result$null.value

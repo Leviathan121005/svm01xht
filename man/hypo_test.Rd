@@ -15,7 +15,7 @@ hypo_test(
 )
 }
 \arguments{
-\item{model}{A list that represents an SVM model.}
+\item{model}{An SVM model list object returned by \code{svm()}.}
 
 \item{data}{A data frame of numerical features data.}
 
@@ -34,19 +34,19 @@ A list containing:
 \describe{
   \item{estimate}{Estimated accuracy of the model.}
   \item{n}{Sample size.}
-  \item{null.value}{Null hypothesis value used in the test.}
-  \item{alternative}{Type of alternative hypothesis used in the test.}
-  \item{method}{Test method used in the test. Z-test or LRT.}
-  \item{alpha}{Significance level used in the test.}
-  \item{test.statistic}{Value of test statistic.}
-  \item{p.value}{P-value of the test.}
-  \item{status}{Reject or fail to reject the null hypothesis.}
+  \item{null.value}{Null hypothesis value.}
+  \item{alternative}{Type of alternative hypothesis.}
+  \item{method}{Test method. Z-test or LRT.}
+  \item{alpha}{Significance level.}
+  \item{test.statistic}{Test statistic value.}
+  \item{p.value}{P-value.}
+  \item{status}{Rejection status of the null hypothesis. Reject or fail to reject.}
   \item{conf.int}{Confidence interval (only for Z-test).}
 }
 }
 \description{
-Conducts a one-sample proportion Z-test or likelihood ratio test (LRT) to determine if the model's accuracy is significantly different from a
-specified null hypothesis value.
+Conducts a one-sample proportion Z-test or likelihood ratio test (LRT) to assess if the model's accuracy differs significantly from a
+specified null value.
 }
 \examples{
 data = data.frame(height = c(169, 179, 159, 165, 190), weight = c(70, 80, 85, 75, 70))

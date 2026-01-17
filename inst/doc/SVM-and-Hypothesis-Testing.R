@@ -81,10 +81,10 @@ test_accuracy(rbf.model, data[random.test.index, ], label[random.test.index])
 
 
 ## ----10, include = TRUE-------------------------------------------------------
-select_features(data, label, n = 8, show = TRUE)
-select_features(data, label, min = 0.1)
+select_correlated_features(data, label, n = 8, show = TRUE)
+select_correlated_features(data, label, min = 0.1)
 
-data = data[, c(select_features(data, label, n = 8))]
+data = data[, c(select_correlated_features(data, label, n = 8))]
 
 
 ## ----11, include = TRUE-------------------------------------------------------

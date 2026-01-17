@@ -9,16 +9,19 @@ preprocess(data, transform = NULL, label.col = NULL)
 \arguments{
 \item{data}{A data frame.}
 
-\item{transform}{A list which maps column names to levels for character into numeric feature conversion.}
+\item{transform}{A list mapping column names to numeric levels for converting character features to numeric.}
 
 \item{label.col}{An index or name of column of the binary label.}
 }
 \value{
-A clean numerical data frame of features and label.
+A data frame with numerical feature columns and a -1 or 1 label column.
 }
 \description{
-Process data by mapping character features to numeric features, removing rows with NA values,
-removing character feature columns that were not mapped, and adjusting label from binary to 1 and -1.
+Processes a data frame by:
+  1. Converting character features into numeric levels based on the provided mappings,
+  2. Removing rows containing NA values,
+  3. Dropping character columns without a mapping, and
+  4. Setting the binary label to -1 and 1.
 }
 \examples{
 data = data.frame(weather = c("Rainy", "Sunny", "Sunny"),

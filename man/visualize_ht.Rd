@@ -24,8 +24,8 @@ Creates plots for visualizing type I error of Z-test and LRT, or type II error, 
 \examples{
 data = data.frame(height = c(170, 190, 150, 160, 180), weight = c(70, 80, 85, 75, 70))
 label = c(-1, -1, 1, 1, -1)
-model = svm(data, label)
-test = hypo_test(model, data, label)
+linear.model = svm(data, label)
+test = hypo_test(linear.model, data, label)
 visualize_ht(test)
 
 }

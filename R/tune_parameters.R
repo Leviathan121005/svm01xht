@@ -1,6 +1,6 @@
 #' Tune SVM Parameters
 #'
-#' Create several SVM models with same training data and test data, but different parameters to determine the best parameter.
+#' Create several SVM models with same training data and test data, but different parameters to determine better parameters.
 #'
 #' @param training.data A data frame of numerical features data to be used for training.
 #' @param training.label A label vector of 1 or -1 with respect to training.data.
@@ -8,7 +8,7 @@
 #' @param test.label A label vector of 1 or -1 with respect to test.data.
 #' @param features A vector of column names of features to use for training. Defaults to all column names.
 #' @param type Kernel type to use for training. Only linear, polynomial, and RBF kernels are available. Defaults to linear.
-#' @param C Regularization parameters (vector) for QP to test. Defaults to 1.
+#' @param C Regularization parameters (vector) for quadratic programming to test. Defaults to 1.
 #' @param c Constants (vector) for polynomial kernel to test. Defaults to 1.
 #' @param degree Degrees (vector) of the polynomial kernel to test. Defaults to 2.
 #' @param gamma Parameters (vector) for RBF kernel to test. Defaults to 1 / number of features.

@@ -1,10 +1,13 @@
 #' Preprocess Data and Label for Binary SVM Classifier
 #'
-#' Process data by mapping character features to numeric features, removing rows with NA values,
-#' removing character feature columns that were not mapped, and adjusting label from binary to 1 and -1.
+#' Processes a data frame by:
+#'   1. Converting character features into numeric levels based on the provided mappings,
+#'   2. Removing rows containing NA values,
+#'   3. Dropping character columns without a mapping, and
+#'   4. Setting the binary label to -1 and 1.
 #'
 #' @param data A data frame.
-#' @param transform A list which maps column names to levels for character into numeric feature conversion.
+#' @param transform A list mapping column names to numeric levels for converting character features to numeric.
 #' @param label.col An index or name of column of the binary label.
 #'
 #' @examples
@@ -13,7 +16,7 @@
 #' transform = list(weather = c("Rainy", "Sunny"), temp = c("Cold", "Mild", "Hot"))
 #' data = preprocess(data, transform, 3)
 #'
-#' @return A clean numerical data frame of features and label.
+#' @return A data frame with numerical feature columns and a -1 or 1 label column.
 #'
 #' @import assertthat
 #'
@@ -21,10 +24,12 @@
 preprocess = function(data, transform = NULL, label.col = NULL) {
   # Input validations.
   assert_that(is.data.frame(data), msg = "data must be a data frame.")
+
   if (!is.null(transform)) {
     assert_that(is.list(transform), msg = "transform must be a list.")
     assert_that(all(names(transform) %in% colnames(data)), msg = "There exist column(s) to transform that is not in data.")
   }
+
   if (!is.null(label.col)) {
     if (is.numeric(label.col)) {
       assert_that(length(label.col) == 1, msg = "Only one column can be the label for binary classification.")
@@ -61,3 +66,4 @@ preprocess = function(data, transform = NULL, label.col = NULL) {
 
   return(data)
 }
+

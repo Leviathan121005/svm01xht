@@ -27,11 +27,11 @@ svm(
 
 \item{type}{Kernel type to use for training. Only linear, polynomial, and RBF kernels are available. Defaults to linear.}
 
-\item{C}{Regularization parameter for QP. Defaults to 1.}
+\item{C}{Regularization parameter for quadratic programming. Defaults to 1.}
 
 \item{degree}{Degree of the polynomial kernel. Defaults to 2.}
 
-\item{c}{A constant for polynomial kernel. Defaults to 1.}
+\item{c}{Constant term for polynomial kernel. Defaults to 1.}
 
 \item{gamma}{Parameter for RBF kernel. Defaults to 1 / number of features.}
 }
@@ -46,10 +46,10 @@ A list that represents the SVM model:
   \item{type}{Kernel type used in training}
   \item{features}{Features used in training.}
   \item{n}{Number of data used in training.}
-  \item{c}{Constant used for the polynomial kernel.}
-  \item{C}{Hyperparameter used for QP dual.}
-  \item{degree}{Degree used for the polynomial kernel.}
-  \item{gamma}{Gamma used for the RBF kernel.}
+  \item{c}{Constant used in the polynomial kernel.}
+  \item{C}{Regularization parameter used in quadratic programming (dual).}
+  \item{degree}{Degree used in the polynomial kernel.}
+  \item{gamma}{Gamma used in the RBF kernel.}
 }
 }
 \description{

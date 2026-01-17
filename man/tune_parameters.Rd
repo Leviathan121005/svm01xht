@@ -30,7 +30,7 @@ tune_parameters(
 
 \item{type}{Kernel type to use for training. Only linear, polynomial, and RBF kernels are available. Defaults to linear.}
 
-\item{C}{Regularization parameters (vector) for QP to test. Defaults to 1.}
+\item{C}{Regularization parameters (vector) for quadratic programming to test. Defaults to 1.}
 
 \item{degree}{Degrees (vector) of the polynomial kernel to test. Defaults to 2.}
 
@@ -42,7 +42,7 @@ tune_parameters(
 A data frame showing the of training accuracy and test accuracy for each combination of parameters.
 }
 \description{
-Create several SVM models with same training data and test data, but different parameters to determine the best parameter.
+Create several SVM models with same training data and test data, but different parameters to determine better parameters.
 }
 \examples{
 data = data.frame(height = c(170, 190, 150, 160, 180), weight = c(70, 80, 85, 75, 70))

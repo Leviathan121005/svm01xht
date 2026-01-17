@@ -7,8 +7,8 @@
 #' @param n Number of data to use for training. Defaults to the number of rows in data.
 #' @param features A vector of column names of features to use for training. Defaults to all column names.
 #' @param type Kernel type to use for training. Only linear, polynomial, and RBF kernels are available. Defaults to linear.
-#' @param C Regularization parameter for QP. Defaults to 1.
-#' @param c A constant for polynomial kernel. Defaults to 1.
+#' @param C Regularization parameter for quadratic programming. Defaults to 1.
+#' @param c Constant term for polynomial kernel. Defaults to 1.
 #' @param degree Degree of the polynomial kernel. Defaults to 2.
 #' @param gamma Parameter for RBF kernel. Defaults to 1 / number of features.
 #'
@@ -27,10 +27,10 @@
 #'   \item{type}{Kernel type used in training}
 #'   \item{features}{Features used in training.}
 #'   \item{n}{Number of data used in training.}
-#'   \item{c}{Constant used for the polynomial kernel.}
-#'   \item{C}{Hyperparameter used for QP dual.}
-#'   \item{degree}{Degree used for the polynomial kernel.}
-#'   \item{gamma}{Gamma used for the RBF kernel.}
+#'   \item{c}{Constant used in the polynomial kernel.}
+#'   \item{C}{Regularization parameter used in quadratic programming (dual).}
+#'   \item{degree}{Degree used in the polynomial kernel.}
+#'   \item{gamma}{Gamma used in the RBF kernel.}
 #' }
 #'
 #' @import assertthat
@@ -43,14 +43,18 @@ svm = function(data, label, n = nrow(data), features = names(data), type = "line
   assert_that(is.data.frame(data), msg = "data must be a data frame.")
   assert_that(all(label %in% c(-1, 1)), msg = "label must consist only of 1 and -1.")
   assert_that(length(label) == nrow(data), msg = "Number of data and label are not equal.")
+
   assert_that(is.numeric(n) && length(n) == 1 && n %% 1 == 0, msg = "n must be an integer.")
   if (n > nrow(data) || n <= 0) {
     n = nrow(data)
   }
   assert_that(all(features %in% colnames(data)), msg = "Some column names of selected features do not exist in data.")
   assert_that(all(sapply(data[, features], is.numeric)), msg = "Selected features must be numeric.")
+
   assert_that(type %in% c("linear", "polynomial", "rbf"), msg = "Only linear, polynomial, and rbf kernels are available.")
+
   assert_that(degree %% 1 == 0 && degree >= 1 && degree <= 5, msg = "Polynomial degree must be a positive integer from 1 to 5.")
+
   assert_that(C > 0 && c >= 0 && gamma > 0, msg = "Negative values are not allowed for C, c, and gamma.")
 
   # Adjust data and label.

@@ -2,14 +2,14 @@
 #'
 #' Calculate value for polynomial and RBF kernel.
 #'
-#' @param Xi First vector.
-#' @param Xj Second vector.
-#' @param type Kernel type polynomial or RBF.
+#' @param Xi First input vector.
+#' @param Xj Second input vector.
+#' @param type Kernel type. Polynomial or RBF.
 #' @param degree Degree of the polynomial kernel.
-#' @param c A constant for polynomial kernel.
-#' @param gamma Parameter for RBF kernel.
+#' @param c Constant term for the polynomial kernel.
+#' @param gamma Parameter for the RBF kernel.
 #'
-#' @return A kernel value.
+#' @return The kernel value.
 #'
 #' @keywords internal
 kernel = function(Xi, Xj, type, degree = 2, c = 1, gamma = 1) {

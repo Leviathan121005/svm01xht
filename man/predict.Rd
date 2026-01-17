@@ -7,7 +7,7 @@
 predict(model, data)
 }
 \arguments{
-\item{model}{A list that represents an SVM model from svm().}
+\item{model}{An SVM model list object returned by \code{svm()}.}
 
 \item{data}{A data frame of numerical features data.}
 }
@@ -19,9 +19,10 @@ Classify data based on the the trained SVM model's kernel, features, and variabl
 }
 \examples{
 data = data.frame(height = c(170, 190, 150, 160, 180), weight = c(70, 80, 85, 75, 70))
+label = c(-1, -1, 1, 1, -1)
+linear.model = svm(data, label)
 test.data = data.frame(height = c(175, 195, 155, 165, 185), weight = c(75, 85, 80, 70, 75))
-model = list(w = c(-1.58, 1.3), b = 0.2, type = "linear", features = c("height", "weight"))
-names(model$w) = c("height", "weight")
-predict(model, test.data)
+test.label = data.frame(-1, -1, 1, -1, -1)
+predict(linear.model, test.data)
 
 }

@@ -7,20 +7,20 @@
 kernel(Xi, Xj, type, degree = 2, c = 1, gamma = 1)
 }
 \arguments{
-\item{Xi}{First vector.}
+\item{Xi}{First input vector.}
 
-\item{Xj}{Second vector.}
+\item{Xj}{Second input vector.}
 
-\item{type}{Kernel type polynomial or RBF.}
+\item{type}{Kernel type. Polynomial or RBF.}
 
 \item{degree}{Degree of the polynomial kernel.}
 
-\item{c}{A constant for polynomial kernel.}
+\item{c}{Constant term for the polynomial kernel.}
 
-\item{gamma}{Parameter for RBF kernel.}
+\item{gamma}{Parameter for the RBF kernel.}
 }
 \value{
-A kernel value.
+The kernel value.
 }
 \description{
 Calculate value for polynomial and RBF kernel.

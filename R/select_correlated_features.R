@@ -1,6 +1,6 @@
-#' Select Meaningful Features
+#' Select Correlated Features
 #'
-#' Analyze correlations between features and label to determine significant features for training.
+#' Choose features with higher correlations with label.
 #'
 #' @param data A data frame of numerical features data.
 #' @param label A label vector of 1 or -1 with respect to data.
@@ -11,7 +11,7 @@
 #' @examples
 #' data = data.frame(height = c(170, 190, 150, 160, 180), weight = c(70, 80, 85, 75, 70))
 #' label = c(-1, -1, 1, 1, -1)
-#' select_features(data, label, 1)
+#' select_correlated_features(data, label, 1)
 #'
 #' @return
 #' A vector of n most meaningful features, or a vector of features with absolute correlation above 0.2 with the label, if n is not specified.
@@ -20,15 +20,17 @@
 #' @import stats
 #'
 #' @export
-select_features = function(data, label, n = NULL, min = 0.3, show = FALSE) {
-  # Input validations
+select_correlated_features = function(data, label, n = NULL, min = 0.3, show = FALSE) {
+  # Validate input
   assert_that(is.data.frame(data), msg = "data must be a data frame")
   assert_that(all(sapply(data, is.numeric)), msg = "data features must be numeric.")
+
   assert_that(all(label %in% c(-1, 1)), msg = "label must consist only of 1 and -1.")
   assert_that(length(label) == nrow(data), msg = "Number of data and label are not equal.")
-  assert_that(is.numeric(min) && min > 0 && min < 1, msg = "min must be a number between 0 and 1")
-  assert_that(is.logical(show), msg = "show must be TRUE or FALSE.")
 
+  assert_that(is.numeric(min) && min > 0 && min < 1, msg = "min must be a number between 0 and 1")
+
+  assert_that(is.logical(show), msg = "show must be TRUE or FALSE.")
 
   # Find the correlations between features and label.
   correlations = sapply(data, function(x) {

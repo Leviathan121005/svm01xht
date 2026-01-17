@@ -1,12 +1,12 @@
 ---
-title: "svm01xht: Support Vector Machine (SVM) for Binary Classification with Hypothesis Testing Evaluation"
+title: "svm01xht: Support Vector Machine (SVM) for Binary Classification with Hypothesis Testing Utilities"
 author: "Vincent, Boer <123040049@link.cuhk.edu.cn> and Adrian, Kristanto <123040001@link.cuhk.edu.cn>"
 output: 
   rmarkdown::html_vignette:
     includes:
       in_header: style.html
 vignette: >
-  %\VignetteIndexEntry{svm01xht: Support Vector Machine (SVM) for Binary Classification with Hypothesis Testing Evaluation}
+  %\VignetteIndexEntry{svm01xht: Support Vector Machine (SVM) for Binary Classification with Hypothesis Testing Utilities}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -135,15 +135,15 @@ test_accuracy(rbf.model, data[random.test.index, ], label[random.test.index])
 
 ```
 
-## Feature Selection
+## Select Correlated Features
 
-In this example dataset, the number of features is small. However, in other datasets, number of features can be very large that feature selection should be done for efficiency. This package has `select_features` function to choose top "n" features if "n" is given, or all meaningful features where a feature is considered meaningful if it's absolute correlation to the label is above some "min" value between 0 and 1.
+In this example dataset, the number of features is small. However, in other datasets, number of features can be very large that feature selection should be done for efficiency. This package has `select_correlated_features` function to choose top "n" correlated features if "n" is given, or all features with absolute correlation to the label above some "min" value between 0 and 1.
 
 ```{r 10, include = TRUE}
-select_features(data, label, n = 8, show = TRUE)
-select_features(data, label, min = 0.1)
+select_correlated_features(data, label, n = 8, show = TRUE)
+select_correlated_features(data, label, min = 0.1)
 
-data = data[, c(select_features(data, label, n = 8))]
+data = data[, c(select_correlated_features(data, label, n = 8))]
 
 ```
 
@@ -213,7 +213,7 @@ rbf.model.lrt$status
 
 ```
 
-If one of the tests reject the null hypothesis, there is enough evidence that the model has accuracy of above 85%. In contrast, if both tests fails to reject the null hypothesis, there is not enough evidence that the model has accuracy of above 80%. To help understanding the test, we can plot the hypothesis testing results using `visualize_ht`. For Z-test, we can also plot the power function (1 - type II error) with respect to the possible true alternatives.
+If one of the tests reject the null hypothesis, there is enough evidence that the model has accuracy of above 85%. In contrast, if both tests fails to reject the null hypothesis, there is not enough evidence that the model has accuracy of above 85%. To help understanding the test, we can plot the hypothesis testing results using `visualize_ht`. For Z-test, we can also plot the power function (1 - type II error) with respect to the possible true alternatives.
 
 ```{r 14, include = TRUE}
 visualize_ht(linear.model.z.test)
@@ -227,8 +227,4 @@ visualize_ht(rbf.model.lrt)
 
 ## About this Package 
 
-This package was developed as a short, two-week learning project to fulfill course requirements. The goal was to provide hands-on experience in R package development, while exploring data science concepts. Therefore, it relies minimally on external libraries and contains areas that remain incomplete.
-
-
-
-
+This package was developed as a short learning project to fulfill course requirements. The goal was to provide hands-on experience in R package development, while exploring data science concepts. Therefore, it relies minimally on external libraries and contains areas that remain incomplete.
